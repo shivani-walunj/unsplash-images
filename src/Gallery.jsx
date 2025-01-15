@@ -7,21 +7,21 @@ const url = `https://api.unsplash.com/search/photos?client_id=${
 }`;
 const Gallery = () => {
   const { searchTerm } = useGlobalContext();
-  const response = useQuery({
+  const { data, isPending, isError } = useQuery({
     queryKey: ["images", searchTerm],
     queryFn: async () => {
       const result = await axios.get(`${url}&query=${searchTerm}`);
       return result.data;
     },
   });
-  if (response.isLoading) {
+  if (isPending) {
     return (
       <section className="image-container">
         <h4>Loading...</h4>
       </section>
     );
   }
-  if (response.isError) {
+  if (isError) {
     return (
       <section className="image-container">
         <h4>There was an error...</h4>
@@ -29,7 +29,7 @@ const Gallery = () => {
     );
   }
 
-  const results = response.data.results;
+  const results = data?.results || [];
   if (results.length < 1) {
     return (
       <section className="image-container">

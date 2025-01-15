@@ -4,11 +4,15 @@ const AppContext = createContext();
 
 const getInitialDarkMode = () => {
   const prefersDarkMode = window.matchMedia(
-    "(prefers-color-scheme:dark)"
+    "(prefers-color-scheme: dark)"
   ).matches;
-  const storedDarkMode = localStorage.getItem("darkTheme") === "true";
+  const storedDarkMode = localStorage.getItem("darkTheme");
 
-  return storedDarkMode || prefersDarkMode;
+  if (storedDarkMode === null) {
+    return prefersDarkMode;
+  }
+
+  return storedDarkMode === "true";
 };
 export const AppProvider = ({ children }) => {
   const [isDarkTheme, setIsDarkTheme] = useState(getInitialDarkMode());
